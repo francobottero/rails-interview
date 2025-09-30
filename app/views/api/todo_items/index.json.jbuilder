@@ -1,0 +1,1 @@
+json.array! @todo_items, :id, :name, :checked, :todo_list_id
