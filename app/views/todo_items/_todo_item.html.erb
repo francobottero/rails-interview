@@ -1,0 +1,8 @@
+<turbo-frame id="<%= dom_id(todo_item) %>">
+  <div class="<%= class_names(
+    'todo-item',
+    'checked': todo_item.checked
+  ) %>">
+    <%= todo_item.name %>
+  </div>
+</turbo-frame>

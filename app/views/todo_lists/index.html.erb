@@ -1,9 +1,21 @@
-<%= link_to 'Add Todo List', new_todo_list_path %>
-
-<div>
+<div class="todo-list-container">
+  <%= link_to 'Add Todo List', new_todo_list_path %>
   <% @todo_lists.each do |todo_list| %>
-    <div>
-      #<%= todo_list.id %> | <%= todo_list.name %>
+    <%= turbo_stream_from todo_list %>
+    <div class="todo-list">
+      <div class="todo-list-header">
+        <%= todo_list.id %> | <%= todo_list.name %>
+        <%= button_to "Complete All",
+          update_all_items_todo_list_path(todo_list.id),
+          method: :patch,
+          data: { turbo_stream: true },
+          class: "btn-complete-all"
+        %>
+      </div>
+      <div class="todo-item-list">
+        <%= render partial: "todo_items/todo_item", collection: todo_list.todo_items, as: :todo_item %>
+      </div>
     </div>
   <% end %>
 </div>
+

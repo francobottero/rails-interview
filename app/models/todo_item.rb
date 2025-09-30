@@ -1,5 +1,5 @@
 class TodoItem < ApplicationRecord
-    belongs_to :todo_list
+	belongs_to :todo_list
 
-    validates :name, presence: true
+	validates :name, presence: true
 end

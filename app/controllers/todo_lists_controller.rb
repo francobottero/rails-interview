@@ -12,4 +12,8 @@ class TodoListsController < ApplicationController
 
     respond_to :html
   end
+
+  def update_all_items
+    UpdateAllItemsWorker.perform_async(params[:id])
+  end
 end
