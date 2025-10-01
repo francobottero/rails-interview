@@ -19,6 +19,8 @@ module Api
 
     def only_accept_json_request
       return if request.format.json?
+
+      raise ActionController::RoutingError, 'Not supported format'
     end
   end
 end

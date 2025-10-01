@@ -1,1 +1,3 @@
-json.array! @todo_items, :id, :name, :checked, :todo_list_id
+json.array! @todo_items do |todo_item|
+  json.partial! 'api/todo_items/todo_item', todo_item: todo_item
+end

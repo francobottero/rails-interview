@@ -19,8 +19,6 @@ class UpdateAllItemsWorker
 
     sleep 2
 
-    puts "Broadcasting to frame: #{dom_id(item)}"
-
     Turbo::StreamsChannel.broadcast_replace_to(
       todo_list,
       target: dom_id(item),

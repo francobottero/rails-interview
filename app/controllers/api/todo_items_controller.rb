@@ -2,7 +2,7 @@ module Api
   class TodoItemsController < ApiController
     # GET /api/todolists/{todo_list_id}/todoitems
     before_action :set_todo_list
-    before_action :set_todo_item, except: [:index]
+    before_action :set_todo_item, except: [:index, :create]
 
     def index
       @todo_items = @todo_list.todo_items
@@ -26,6 +26,10 @@ module Api
       @todo_item.destroy
 
       head :no_content
+    end
+
+    def show
+      respond_to :json
     end
 
     private
