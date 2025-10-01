@@ -14,7 +14,7 @@
   unsynced_items = TodoItem.where('updated_at > synced_at OR synced_at IS NULL')
   ```
 
-- **Conflict Resolution:** The latest change wins, determined by comparing `updated_at` timestamps. If both local and remote have changes, the newer one overwrites the older.
+- **Conflict Resolution:** The latest change wins, determined by comparing `updated_at` timestamps. If both local and remote have changes, the newer one overwrites the older. If it was neccesary, we could also define a heirarchy here (local has greater importance than remote, or otherwise).
 
   ```ruby
   # Example: Conflict resolution
@@ -25,7 +25,7 @@
   end
   ```
 
-- **Batching:** Where possible, changes are batched to minimize API calls.
+- **Batching:** Where possible, changes are batched to minimize API calls. For example, where the handshake fails between local and remote API, or when the remote API is not possible to reach (due to failures or shutdown). We could keep a list of those todo list items that were not updated, and send them all together to reduce overhead and API calls.
 
   ```ruby
   # Example: Batch push
@@ -45,6 +45,7 @@
     rescue => e
       sleep(2 ** attempt)
       log_error(e)
+      # As mentioned above, we could add a "state" that controls whether it was synced | failed
     end
   end
   ```
@@ -95,4 +96,10 @@
   logger.info("Sync diff: local=#{local_item.attributes}, remote=#{remote_item.attributes}")
   ```
 
-We could also store these in an external application, for example DataDog, for further digging.
+### Notes
+
+For starters, we could highten the accuracy of error handling and logging by adding an external application to our stack (such as DataDog) to keep track of syncs that failed, this way getting a larger sense of why or where.
+
+For future improvements, I would add the opportunity of manual sync by the press of a button and the option to choose between local or remote state (given that those two have a conflict).
+
+--> Finally, for Damian, the foreign_key essentially enforces referential integrity at a database level. I remember being so mad about this because I was in the right track. Now, after a lil bit of reading, I can tell you that having it on false makes it rely on application-level validations (validates :..., presence: true).
