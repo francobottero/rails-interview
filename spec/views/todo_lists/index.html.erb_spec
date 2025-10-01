@@ -1,0 +1,30 @@
+# spec/views/todo_lists/index.html.erb_spec.rb
+require "rails_helper"
+
+RSpec.describe "todo_lists/index.html.erb", type: :view do
+  let!(:todo_list) { TodoList.create!(name: "Make the exercises for the interview") }
+  let!(:todo_item1) { todo_list.todo_items.create!(name: "CRUD for the todo_items", checked: true) }
+  let!(:todo_item2) { todo_list.todo_items.create!(name: "Add tests", checked: false) }
+  let!(:todo_item3) { todo_list.todo_items.create!(name: "Tidy up code and send the email", checked: false) }
+
+  it "renders a link to add a new todo list" do
+    expect(rendered).to have_link("Add Todo List", href: new_todo_list_path)
+  end
+
+  it "renders the todo list id and name" do
+    expect(rendered).to include(todo_list.id.to_s)
+    expect(rendered).to include("Make the exercises for the interview")
+  end
+
+  it "renders a Complete All button with turbo_stream enabled" do
+    expect(rendered).to have_selector("form[action='#{update_all_items_todo_list_path(todo_list.id)}'][method='post']")
+    expect(rendered).to have_button("Complete All")
+    expect(rendered).to include('data-turbo-stream="true"')
+  end
+
+  it "renders todo_items via the partial" do
+    expect(rendered).to include("CRUD for the todo_items")
+    expect(rendered).to include("Add tests")
+    expect(rendered).to include("Tidy up code and send the email")
+  end
+end
